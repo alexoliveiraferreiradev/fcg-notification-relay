@@ -8,16 +8,16 @@
         OrderDeliveryFailed = 4
     }
 
-    public static class NotificationQueueSettings
+    public static class NotificationQueueExtensions
     {
         public static string ToQueueName(this NotificationQueue queue)
         {
             return queue switch
             {
-                NotificationQueue.UserCreated => "user-created-queue",
-                NotificationQueue.PaymentApproved => "payment-approved-queue",
-                NotificationQueue.PurchaseRejected => "purchase-rejected-queue",
-                NotificationQueue.OrderDeliveryFailed => "order-delivery-failed-queue",
+                NotificationQueue.UserCreated => "notification-user-created-queue",
+                NotificationQueue.PaymentApproved => "notification-payment-approved-queue",
+                NotificationQueue.PurchaseRejected => "notification-purchase-rejected-queue",
+                NotificationQueue.OrderDeliveryFailed => "notification-order-delivery-failed-queue",
                 _ => throw new ArgumentOutOfRangeException(nameof(queue), queue, null)
             };
         }
