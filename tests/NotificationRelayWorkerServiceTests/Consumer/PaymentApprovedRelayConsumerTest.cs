@@ -23,16 +23,16 @@ namespace NotificationRelayWorkerServiceTests.Consumer
             _handler = new PaymentApprovedRelayConsumer(_busServiceMock.Object, _loggerMock.Object);
         }
 
-        private static Mock<ConsumeContext<IPaymentProcessedIntegrationEvent>> CreateContext(Guid eventId, Guid orderId, Guid userId, IEnumerable<Guid> gameIds, DateTime createdAt)
+        private static Mock<ConsumeContext<IPaymentApprovedIntegrationEvent>> CreateContext(Guid eventId, Guid orderId, Guid userId, IEnumerable<Guid> gameIds, DateTime createdAt)
         {
-            var paymentApprovedEvent = new Mock<IPaymentProcessedIntegrationEvent>();
+            var paymentApprovedEvent = new Mock<IPaymentApprovedIntegrationEvent>();
             paymentApprovedEvent.SetupGet(e => e.EventId).Returns(eventId);
             paymentApprovedEvent.SetupGet(e => e.OrderId).Returns(orderId);
             paymentApprovedEvent.SetupGet(e => e.UserId).Returns(userId);
             paymentApprovedEvent.SetupGet(e => e.GameIds).Returns(gameIds);
             paymentApprovedEvent.SetupGet(e => e.CreatedAt).Returns(createdAt);
 
-            var consumeContextMock = new Mock<ConsumeContext<IPaymentProcessedIntegrationEvent>>();
+            var consumeContextMock = new Mock<ConsumeContext<IPaymentApprovedIntegrationEvent>>();
             consumeContextMock.SetupGet(c => c.Message).Returns(paymentApprovedEvent.Object);
             consumeContextMock.SetupGet(c => c.CancellationToken).Returns(CancellationToken.None);
             return consumeContextMock;

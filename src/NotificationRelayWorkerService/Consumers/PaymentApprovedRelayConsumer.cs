@@ -6,7 +6,7 @@ using System.Text.Json;
 
 namespace NotificationRelayWorkerService.Consumers
 {
-    public class PaymentApprovedRelayConsumer : IConsumer<IPaymentProcessedIntegrationEvent>
+    public class PaymentApprovedRelayConsumer : IConsumer<IPaymentApprovedIntegrationEvent>
     {
         private readonly IBusService _service;
         private readonly ILogger<PaymentApprovedRelayConsumer> _logger;
@@ -18,7 +18,7 @@ namespace NotificationRelayWorkerService.Consumers
         }
 
 
-        public async Task Consume(ConsumeContext<IPaymentProcessedIntegrationEvent> context)
+        public async Task Consume(ConsumeContext<IPaymentApprovedIntegrationEvent> context)
         {
             try
             {

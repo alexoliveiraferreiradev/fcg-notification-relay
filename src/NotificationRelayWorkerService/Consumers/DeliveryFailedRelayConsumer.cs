@@ -6,7 +6,7 @@ using System.Text.Json;
 
 namespace NotificationRelayWorkerService.Consumers
 {
-    internal class DeliveryFailedRelayConsumer : IConsumer<IDeliveryFailedIntegrationEvent>
+    public class DeliveryFailedRelayConsumer : IConsumer<IDeliveryFailedIntegrationEvent>
     {
         private readonly IBusService _service;
         private readonly ILogger<DeliveryFailedRelayConsumer> _logger;
