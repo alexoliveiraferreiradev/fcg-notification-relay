@@ -17,9 +17,13 @@ namespace NotificationRelayWorkerService.Broker.RabbitMq
 
         [Required(ErrorMessage = "Senha é obrigatória.")]
         public string Password { get; set; } = string.Empty;
-        [Required(ErrorMessage = "PaymentOrderQueue é obrigatório")]
-        public string PaymentOrderQueue { get; set; } = string.Empty;
-        [Required(ErrorMessage = "PaymentDeliveryFailedQueue é obrigatório")]
-        public string PaymentDeliveryFailedQueue { get; set; } = string.Empty;
+        [Required(ErrorMessage = "NotificationUserCreatedQueue é obrigatório")]
+        public string NotificationUserCreatedQueue { get; set; } = string.Empty;
+        [Required(ErrorMessage = "NotificationOrderDeliveryFailedQueue é obrigatório")]
+        public string NotificationOrderDeliveryFailedQueue { get; set; } = string.Empty;
+        [Required(ErrorMessage = "NotificationPaymentApprovedQueue é obrigatório")]
+        public string NotificationPaymentApprovedQueue { get; set; } = string.Empty;
+        [Required(ErrorMessage = "NotificationPurchaseRejectedQueue é obrigatório")]
+        public string NotificationPurchaseRejectedQueue { get; set; } = string.Empty;
     }
 }

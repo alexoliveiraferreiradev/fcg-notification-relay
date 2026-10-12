@@ -8,10 +8,16 @@ namespace NotificationRelayWorkerService.Extensions
 {
     public static class MassTransitExtension
     {
-        public static void AddMassTransit(this HostApplicationBuilder builder)
+        public static IServiceCollection AddMassTransitExtension(this IServiceCollection services)
         {
-            builder.Services.AddMassTransit(x =>
+            services.AddOptions<RabbitMqSettings>()
+                .BindConfiguration(RabbitMqSettings.SectionName)
+                .ValidateDataAnnotations()
+                .ValidateOnStart();
+
+            services.AddMassTransit(x =>
             {
+                
                 x.AddConsumers(typeof(UserCreatedRelayConsumer).Assembly);
 
                 x.UsingRabbitMq((context,cfg) =>
@@ -31,25 +37,25 @@ namespace NotificationRelayWorkerService.Extensions
                     });
 
 
-                    cfg.ReceiveEndpoint("notification-user-created", e =>
+                    cfg.ReceiveEndpoint(rabbitMqConfig.NotificationUserCreatedQueue, e =>
                     {
                         e.PrefetchCount = 8;
                         e.ConfigureConsumer<UserCreatedRelayConsumer>(context);
                     });
 
-                    cfg.ReceiveEndpoint("notification-payment-approved", e =>
+                    cfg.ReceiveEndpoint(rabbitMqConfig.NotificationPaymentApprovedQueue, e =>
                     {
                         e.PrefetchCount = 8;
                         e.ConfigureConsumer<PaymentApprovedRelayConsumer>(context);
                     });
 
-                    cfg.ReceiveEndpoint("notification-payment-failed", e =>
+                    cfg.ReceiveEndpoint(rabbitMqConfig.NotificationPurchaseRejectedQueue, e =>
                     {
                         e.PrefetchCount = 8;
-                        e.ConfigureConsumer<PaymentFailedRelayConsumer>(context);
+                        e.ConfigureConsumer<PurchaseFailedRelayConsumer>(context);
                     });
 
-                    cfg.ReceiveEndpoint("notification-delivery-failed", e =>
+                    cfg.ReceiveEndpoint(rabbitMqConfig.NotificationOrderDeliveryFailedQueue, e =>
                     {
                         e.PrefetchCount = 8;
                         e.ConfigureConsumer<DeliveryFailedRelayConsumer>(context);
@@ -57,6 +63,8 @@ namespace NotificationRelayWorkerService.Extensions
 
                 });
             });
+
+            return services;
         }
     }
 }

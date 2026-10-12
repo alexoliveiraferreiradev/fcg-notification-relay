@@ -1,7 +1,7 @@
 using NotificationRelayWorkerService.Extensions;
 
 var builder = Host.CreateApplicationBuilder(args);
-builder.AddServiceBus(builder.Configuration);   
-builder.AddMassTransit();
+builder.Services.AddServiceBus();
+builder.Services.AddMassTransitExtension(builder.Configuration);
 var host = builder.Build();
 host.Run();
