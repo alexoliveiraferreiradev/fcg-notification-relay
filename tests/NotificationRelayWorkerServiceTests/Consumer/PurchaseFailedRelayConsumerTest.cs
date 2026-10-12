@@ -8,31 +8,31 @@ using NotificationRelayWorkerService.Consumers;
 
 namespace NotificationRelayWorkerServiceTests.Consumer
 {
-    public class PaymentFailedRelayConsumerTest
+    public class PurchaseFailedRelayConsumerTest
     {
         private readonly Mock<IBusService> _busServiceMock;
-        private readonly Mock<ILogger<PaymentFailedRelayConsumer>> _loggerMock;
+        private readonly Mock<ILogger<PurchaseFailedRelayConsumer>> _loggerMock;
 
-        private readonly PaymentFailedRelayConsumer _handler;
+        private readonly PurchaseFailedRelayConsumer _handler;
 
-        public PaymentFailedRelayConsumerTest()
+        public PurchaseFailedRelayConsumerTest()
         {
             _busServiceMock = new Mock<IBusService>();
-            _loggerMock = new Mock<ILogger<PaymentFailedRelayConsumer>>();
+            _loggerMock = new Mock<ILogger<PurchaseFailedRelayConsumer>>();
 
-            _handler = new PaymentFailedRelayConsumer(_busServiceMock.Object, _loggerMock.Object);
+            _handler = new PurchaseFailedRelayConsumer(_busServiceMock.Object, _loggerMock.Object);
         }
 
-        private static Mock<ConsumeContext<IPaymentFailedIntegrationEvent>> CreateContext(Guid eventId, Guid orderId, Guid userId, string reason)
+        private static Mock<ConsumeContext<IPurchaseRejectedIntegrationEvent>> CreateContext(Guid eventId, Guid orderId, Guid userId, string reason)
         {
-            var paymentFailedEvent = new Mock<IPaymentFailedIntegrationEvent>();
-            paymentFailedEvent.SetupGet(e => e.EventId).Returns(eventId);
-            paymentFailedEvent.SetupGet(e => e.OrderId).Returns(orderId);
-            paymentFailedEvent.SetupGet(e => e.UserId).Returns(userId);
-            paymentFailedEvent.SetupGet(e => e.Reason).Returns(reason);
+            var purchaseFailedEvent = new Mock<IPurchaseRejectedIntegrationEvent>();
+            purchaseFailedEvent.SetupGet(e => e.EventId).Returns(eventId);
+            purchaseFailedEvent.SetupGet(e => e.OrderId).Returns(orderId);
+            purchaseFailedEvent.SetupGet(e => e.UserId).Returns(userId);
+            purchaseFailedEvent.SetupGet(e => e.Reason).Returns(reason);
 
-            var consumeContextMock = new Mock<ConsumeContext<IPaymentFailedIntegrationEvent>>();
-            consumeContextMock.SetupGet(c => c.Message).Returns(paymentFailedEvent.Object);
+            var consumeContextMock = new Mock<ConsumeContext<IPurchaseRejectedIntegrationEvent>>();
+            consumeContextMock.SetupGet(c => c.Message).Returns(purchaseFailedEvent.Object);
             consumeContextMock.SetupGet(c => c.CancellationToken).Returns(CancellationToken.None);
             return consumeContextMock;
         }
@@ -50,11 +50,11 @@ namespace NotificationRelayWorkerServiceTests.Consumer
             // Assert
             _busServiceMock.Verify(b => b.SendMessageAsync(
                 NotificationQueue.PurchaseRejected,
-                It.Is<object>(p => p is PaymentFailedNotification
-                    && ((PaymentFailedNotification)p).EventId == eventId
-                    && ((PaymentFailedNotification)p).OrderId == orderId
-                    && ((PaymentFailedNotification)p).UserId == userId
-                    && ((PaymentFailedNotification)p).Reason == "Saldo insuficiente"),
+                It.Is<object>(p => p is PurchaseRejectNotification
+                    && ((PurchaseRejectNotification)p).EventId == eventId
+                    && ((PurchaseRejectNotification)p).OrderId == orderId
+                    && ((PurchaseRejectNotification)p).UserId == userId
+                    && ((PurchaseRejectNotification)p).Reason == "Saldo insuficiente"),
                 eventId,
                 CancellationToken.None), Times.Once);
         }

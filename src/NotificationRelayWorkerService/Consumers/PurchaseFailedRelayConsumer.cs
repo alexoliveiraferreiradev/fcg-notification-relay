@@ -6,17 +6,17 @@ using System.Text.Json;
 
 namespace NotificationRelayWorkerService.Consumers
 {
-    internal class PaymentFailedRelayConsumer : IConsumer<IPaymentFailedIntegrationEvent>
+    public class PurchaseFailedRelayConsumer : IConsumer<IPurchaseRejectedIntegrationEvent>
     {
         private readonly IBusService _service;
-        private readonly ILogger<PaymentFailedRelayConsumer> _logger;
+        private readonly ILogger<PurchaseFailedRelayConsumer> _logger;
 
-        public PaymentFailedRelayConsumer(IBusService service, ILogger<PaymentFailedRelayConsumer> logger)
+        public PurchaseFailedRelayConsumer(IBusService service, ILogger<PurchaseFailedRelayConsumer> logger)
         {
             _service = service;
             _logger = logger;
         }
-        public async Task Consume(ConsumeContext<IPaymentFailedIntegrationEvent> context)
+        public async Task Consume(ConsumeContext<IPurchaseRejectedIntegrationEvent> context)
         {
             try
             {
@@ -27,7 +27,7 @@ namespace NotificationRelayWorkerService.Consumers
                     throw new ArgumentException("Mensagem de pagamento falho inválida. EventId não pode ser vazio.");
                 }
                 _logger.LogInformation("Mensagem de pagamento falho recebida. EventId: {EventId}, OrderId: {OrderId}, UserId: {UserId}", message.EventId, message.OrderId, message.UserId);
-                var paymentFailedNotification = new PaymentFailedNotification
+                var purchaseRejectNotification = new PurchaseRejectNotification
                 (
                     message.EventId,
                     message.OrderId,
@@ -35,7 +35,7 @@ namespace NotificationRelayWorkerService.Consumers
                     message.Reason
                 );
                 _logger.LogInformation("Processando mensagem de pagamento falho. EventId: {EventId}, OrderId: {OrderId}, UserId: {UserId}", context.Message.EventId, context.Message.OrderId, context.Message.UserId);
-                await _service.SendMessageAsync(NotificationQueue.PurchaseRejected, paymentFailedNotification, message.EventId, context.CancellationToken);
+                await _service.SendMessageAsync(NotificationQueue.PurchaseRejected, purchaseRejectNotification, message.EventId, context.CancellationToken);
             }
             catch
             {
