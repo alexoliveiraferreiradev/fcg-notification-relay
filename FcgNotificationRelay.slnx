@@ -1,0 +1,8 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/NotificationRelayWorkerService/NotificationRelayWorkerService.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/NotificationRelayWorkerServiceTests/NotificationRelayWorkerServiceTests.csproj" Id="007b0c12-e183-4ee8-b79c-13c16e53fcba" />
+  </Folder>
+</Solution>
